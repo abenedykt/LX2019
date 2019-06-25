@@ -7,32 +7,32 @@ namespace TestyAutoSzkolenie
 {
     public class BrandNewTest : IDisposable
     {
-        ChromeDriver browser;
+        IWebDriver driver;
 
         public BrandNewTest()
         {
-            browser = new ChromeDriver();
+            driver = new ChromeDriver();
         }
 
         public void Dispose()
         {
-            browser.Quit();
+            driver.Quit();
         }
 
         [Fact]
         public void ICanSearchInGoogle()
         {
             // Arrange
-            browser.Navigate().GoToUrl("http://www.google.com");
+            driver.Navigate().GoToUrl("http://www.google.com");
 
-            IWebElement searchFilter = browser.FindElementByClassName("gLFyf");
+            IWebElement searchBox = driver.FindElement(By.ClassName("gLFyf"));
 
             // Act
-            searchFilter.SendKeys("CodeSprinters");
-            searchFilter.SendKeys(Keys.Enter);
+            searchBox.SendKeys("CodeSprinters");
+            searchBox.SendKeys(Keys.Enter);
 
             // Assert
-            Assert.True(browser.FindElementByXPath("//h3[contains(text(),'Harmonogram szkoleń publicznych - Code Sprinters -')]").Displayed);
+            Assert.True(driver.FindElement(By.XPath("//h3[contains(text(),'Harmonogram szkoleń publicznych - Code Sprinters -')]")).Displayed);
         }
     }
 }
