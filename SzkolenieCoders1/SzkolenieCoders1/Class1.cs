@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using Xunit;
 
 namespace SzkolenieCoders1
@@ -58,8 +59,8 @@ namespace SzkolenieCoders1
 
             Thread.Sleep(1000);
 
-            IWebElement loginbutton = browser.FindElement(By.Id("wp-submit"));
-            loginbutton.Click();
+            IWebElement signInButton = browser.FindElement(By.Id("wp-submit"));
+            signInButton.Click();
 
             IWebElement noteMenu = browser.FindElement(By.Id("menu-posts"));
             noteMenu.Click();
@@ -69,21 +70,42 @@ namespace SzkolenieCoders1
             IWebElement buttonNewNote = browser.FindElement(By.ClassName("page-title-action"));
             buttonNewNote.Click();
 
-            //Thread.Sleep(1000);
+            IWebElement titleNoteTextBox = browser.FindElement(By.Id("title"));
+            titleNoteTextBox.SendKeys(title);
 
-            IWebElement titleNote = browser.FindElement(By.Id("title"));
-            titleNote.SendKeys(title);
-
-            //Thread.Sleep(1000);
-
-            IWebElement textNote = browser.FindElement(By.ClassName("wp-editor-area"));
-            textNote.SendKeys(text);
-
-            //Thread.Sleep(1000);
+            IWebElement textNoteTextBox = browser.FindElement(By.ClassName("wp-editor-area"));
+            textNoteTextBox.SendKeys(text);
 
             IWebElement publishNoteButton = browser.FindElement(By.Id("publish"));
             publishNoteButton.Click();
 
+            IWebElement linkObject = browser.FindElement(By.CssSelector("#sample-permalink>a"));
+            string linkToNote = linkObject.GetAttribute("href");
+
+            IWebElement logOutButton = browser.FindElement(By.Id("wp-admin-bar-logout"));
+
+            MoveToElement(By.ClassName("display-name"));
+            logOutButton.Click();
+
+            browser.Navigate().GoToUrl(linkToNote);
+
+            var resultNote = browser.FindElements(By.XPath("//div[contains(@id, 'primary')]"));
+            Assert.NotNull(resultNote.FirstOrDefault(e => e.Text.Contains(title)));
+            Assert.NotNull(resultNote.FirstOrDefault(e => e.Text.Contains(text)));
+
+        }
+
+        public void MoveToElement(By selector)
+        {
+            var element = browser.FindElement(selector);
+            MoveToElement(element);
+        }
+
+        public void MoveToElement(IWebElement element)
+        {
+            Actions builder = new Actions(browser);
+            Actions moveTo = builder.MoveToElement(element);
+            moveTo.Build().Perform();
         }
     }
 }
