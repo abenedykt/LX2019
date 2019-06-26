@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 using Xunit;
 
 namespace SzkolenieCoders1
@@ -47,9 +48,11 @@ namespace SzkolenieCoders1
         [Fact]
         public void ICanAddNoteToBlog()
         {
-            string title = "NotatkaJarka";
-            string text = "Moja mega notateczka";
+            string title = Faker.Lorem.Sentence();
+            string text = Faker.Lorem.Sentence();
             browser.Navigate().GoToUrl("http://automatyzacja.benedykt.net/wp-admin");
+
+            WaitForClickable(By.Id("user_login"), 10);
 
             IWebElement login = browser.FindElement(By.Id("user_login"));
             login.SendKeys("automatyzacja");
@@ -57,15 +60,11 @@ namespace SzkolenieCoders1
             IWebElement password = browser.FindElement(By.Id("user_pass"));
             password.SendKeys("jesien2018");
 
-            Thread.Sleep(1000);
-
             IWebElement signInButton = browser.FindElement(By.Id("wp-submit"));
             signInButton.Click();
 
             IWebElement noteMenu = browser.FindElement(By.Id("menu-posts"));
             noteMenu.Click();
-
-            Thread.Sleep(1000);
 
             IWebElement buttonNewNote = browser.FindElement(By.ClassName("page-title-action"));
             buttonNewNote.Click();
@@ -78,6 +77,8 @@ namespace SzkolenieCoders1
 
             IWebElement publishNoteButton = browser.FindElement(By.Id("publish"));
             publishNoteButton.Click();
+
+            WaitForVisible(By.Id("message"), 5);
 
             IWebElement linkObject = browser.FindElement(By.CssSelector("#sample-permalink>a"));
             string linkToNote = linkObject.GetAttribute("href");
@@ -106,6 +107,18 @@ namespace SzkolenieCoders1
             Actions builder = new Actions(browser);
             Actions moveTo = builder.MoveToElement(element);
             moveTo.Build().Perform();
+        }
+
+        public void WaitForVisible(By by, int seconds)
+        {
+            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(by));
+        }
+
+        public void WaitForClickable(By by, int seconds)
+        {
+            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
         }
     }
 }
