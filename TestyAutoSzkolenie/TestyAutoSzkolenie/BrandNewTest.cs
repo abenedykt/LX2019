@@ -21,21 +21,21 @@ namespace TestyAutoSzkolenie
             driver.Quit();
         }
 
-        //[Fact]
-        //public void ICanSearchInGoogle()
-        //{
-        //    // Arrange
-        //    driver.Navigate().GoToUrl("http://www.google.com");
+        [Fact]
+        public void ICanSearchInGoogle()
+        {
+            // Arrange
+            driver.Navigate().GoToUrl("http://www.google.com");
 
-        //    IWebElement searchBox = driver.FindElement(By.ClassName("gLFyf"));
+            IWebElement searchBox = driver.FindElement(By.ClassName("gLFyf"));
 
-        //    // Act
-        //    searchBox.SendKeys("CodeSprinters");
-        //    searchBox.SendKeys(Keys.Enter);
+            // Act
+            searchBox.SendKeys("CodeSprinters");
+            searchBox.SendKeys(Keys.Enter);
 
-        //    // Assert
-        //    Assert.True(driver.FindElement(By.XPath("//h3[contains(text(),'Harmonogram szkoleń publicznych - Code Sprinters -')]")).Displayed);
-        //}
+            // Assert
+            Assert.True(driver.FindElement(By.XPath("//h3[contains(text(),'Harmonogram szkoleń publicznych - Code Sprinters -')]")).Displayed);
+        }
 
         [Fact]
         public void AddNote()
@@ -44,17 +44,8 @@ namespace TestyAutoSzkolenie
 
             string login = "automatyzacja";
             string pass = "jesien2018";
-            string title = "Konstantynopolitańczykowianeczka";
-            string content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dictum auctor ultrices. " +
-                             "Curabitur lacinia ut lectus id pellentesque. Integer sit amet semper ipsum. Curabitur " +
-                             "imperdiet tellus ac auctor aliquam. Fusce fermentum euismod enim ut lacinia. Sed vitae " +
-                             "blandit lectus. Aenean rhoncus sed risus eu ornare. Nulla eget quam eget risus sollicitudin" +
-                             " gravida mattis semper arcu. Pellentesque habitant morbi tristique senectus et netus et" +
-                             " malesuada fames ac turpis egestas.In quis vestibulum quam, eget maximus tortor. Cras mollis" +
-                             " risus nec faucibus fringilla. Praesent lectus massa, suscipit et libero nec, lacinia maximus" +
-                             " lorem. Maecenas eget tellus eget sem tristique viverra ac a sapien. Curabitur ac euismod ipsum," +
-                             " rutrum tempus est. Donec venenatis, risus id scelerisque viverra, nunc ligula egestas lacus," +
-                             " non lacinia nisl nulla eu odio.";
+            string title = Faker.Lorem.Sentence(5);
+            string content = Faker.Lorem.Sentence(100);
 
             IWebElement loginInput = driver.FindElement(By.Id("user_login"));
             IWebElement passwordInput = driver.FindElement(By.Id("user_pass"));
@@ -64,12 +55,13 @@ namespace TestyAutoSzkolenie
             passwordInput.SendKeys(pass);
             submitBtn.Click();
 
-            IWebElement notesMenu = driver.FindElement(By.ClassName("wp-menu-name"));
-            IWebElement addNewNote = driver.FindElement(By.ClassName("page-title-action"));
-            IWebElement textTab = driver.FindElement(By.Id("content-html"));
-
+            IWebElement notesMenu = driver.FindElement(By.XPath("//*[@class='wp-menu-name'][contains(text(),'Wpisy')]"));
             notesMenu.Click();
-            addNewNote.Click();
+
+            IWebElement addNewNoteBtn = driver.FindElement(By.ClassName("page-title-action"));
+            addNewNoteBtn.Click();
+
+            IWebElement textTab = driver.FindElement(By.Id("content-html"));
             textTab.Click();
 
             IWebElement titleField = driver.FindElement(By.Id("title"));
@@ -78,20 +70,23 @@ namespace TestyAutoSzkolenie
 
             titleField.SendKeys(title);
             textField.SendKeys(content);
+
+            string noteRoute = driver.FindElement(By.CssSelector("#sample-permalink a")).GetAttribute("href");
+
             publishBtn.Click();
 
-            IWebElement avatarMenu = driver.FindElement(By.ClassName("menupop"));
-            IWebElement logoutBtn = driver.FindElement(By.ClassName("ab-item"));
-            IWebElement logoutConfirm = driver.FindElement(By.XPath("//a[contains(text(),'wylogować')]"));
+            IWebElement avatarMenu = driver.FindElement(By.Id("wp-admin-bar-my-account"));
+            IWebElement logoutBtn = driver.FindElement(By.Id("wp-admin-bar-logout"));
 
             Actions builder = new Actions(driver);
-            builder.MoveToElement(avatarMenu).Click(logoutBtn).Build().Perform();
+            builder.MoveToElement(avatarMenu).Build().Perform();
+            logoutBtn.Click();
 
-            logoutConfirm.Click();
+            driver.Navigate().GoToUrl(noteRoute);
 
-            driver.Navigate().GoToUrl("http://automatyzacja.benedykt.net");
-
-            Assert.NotNull(driver.FindElement(By.XPath($"//a[contains(text(),'{title}')]")));
+            waitForClickable(By.ClassName("entry-title"), 10);
+            Assert.Equal(title, driver.FindElement(By.ClassName("entry-title")).Text);
+            Assert.Equal(content, driver.FindElement(By.XPath($"//p[contains(text(),'{content}')]")).Text);            
         }
 
         public void waitForClickable(By by, int seconds)
