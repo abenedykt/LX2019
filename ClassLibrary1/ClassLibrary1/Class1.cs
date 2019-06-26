@@ -91,10 +91,12 @@ namespace ClassLibrary1
             IWebElement PublisheButton = browser.FindElement(By.XPath("//*[@id='publish']"));
             PublisheButton.Click();
 
-            IWebDriver.WaitForClickable(By, by int 60 seconds);
+           //IWebDriver.WaitForClickable(By, by int 60 seconds);
 
             IWebElement NoteLink = browser.FindElement(By.XPath("//*[@id='sample-permalink']/a"));
             NoteLink.Click();
+
+           /// Thread.Sleep();
 
             //[assert]
             Assert.Equal("Fajny kurs :). TEXT test BK", browser.FindElement(By.ClassName("entry-header")).Text);
