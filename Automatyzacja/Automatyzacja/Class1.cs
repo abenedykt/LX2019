@@ -139,5 +139,28 @@ namespace Automatyzacja
             moveTo.Build().Perform();
         }
 
+        //public void Example()
+        //{
+        //    items.Where(x => x > 10);
+        //}
+
+        //public void Example()
+        //{
+        //    items.Where(x => {
+        //        return x > 10;
+        //    });
+        //}
+
+        //public bool predicate(int x)
+        //{
+        //    if( x > 10)
+        //    {
+        //        return true;
+        //    } else
+        //    {
+        //        return false;
+        //    }
+        //}
+
     }
 }
