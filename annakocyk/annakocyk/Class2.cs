@@ -1,72 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace annakocyk
+namespace Automatyzacja
 {
     public class FirstWebTest : IDisposable
     {
-
         IWebDriver browser;
-
         public FirstWebTest()
         {
             browser = new ChromeDriver();
         }
 
-        public object Asert { get; private set; }
-
         public void Dispose()
         {
-
-
             browser.Quit();
-
         }
 
         [Fact]
-        public void ICanSerchInGoogle()
+        public void ICanSearchInGoogle()
         {
+            // arrange
+            browser.Navigate().GoToUrl("http://google.com");
 
-
-            //arange
-            browser.Navigate().GoToUrl("https://google.com");
-
-            //act
-            var serchBox = browser.FindElement(By.CssSelector(".gLFyf.gsfi"));
-            serchBox.SendKeys("codesprinters");
+            // act
+            var queryField = browser.FindElement(By.CssSelector(".gLFyf.gsfi"));
+            queryField.SendKeys("codesprinters");
 
             var searchButton = browser.FindElement(By.ClassName("gNO89b"));
             searchButton.Click();
 
 
-            //assert
+            // assert
             var results = browser.FindElements(By.CssSelector("span.st"));
-
-            Assert.NotNull(browser
-                .FindElements(By.CssSelector("span.st"))
-                .FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń realizowanych przez")));
-
-            // browser.FindElementByClassName("LC20lb").Text;
-
+            Assert.NotNull(results.FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń realizowanych przez")));
 
         }
-
-        //wchodzimy na google.com
-        //szukamy codesprinters
-        // sprawdzamy czy w wyniku jest codesprinters
-
-
-
-        //act
-        //assert
 
 
         [Fact]
@@ -160,30 +137,7 @@ namespace annakocyk
             Actions builder = new Actions(browser);
             Actions moveTo = builder.MoveToElement(element);
             moveTo.Build().Perform();
-
-
-
-
-
-
-
-
         }
-       
 
-        public void ScrollToElement(By selector)
-
-        {
-
-            IWebElement element = browser.FindElement(selector);
-
-            Actions actions = new Actions(browser);
-
-            actions.MoveToElement(element);
-
-            actions.Perform();
-
-        }
     }
-
-}        
+}

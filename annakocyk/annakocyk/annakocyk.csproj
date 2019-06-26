@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Faker.NET45, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Faker.Net.1.1.1\lib\net452\Faker.NET45.dll</HintPath>
+    </Reference>
     <Reference Include="SeleniumExtras.WaitHelpers, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetSeleniumExtras.WaitHelpers.3.11.0\lib\net45\SeleniumExtras.WaitHelpers.dll</HintPath>
     </Reference>
@@ -65,6 +68,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Class2.cs" />
+    <Compile Include="PageObjectsExample\AdminPage.cs" />
+    <Compile Include="PageObjectsExample\Credentials.cs" />
+    <Compile Include="PageObjectsExample\LoginPage.cs" />
+    <Compile Include="PageObjectsExample\Note.cs" />
+    <Compile Include="PageObjectsExample\NotePage.cs" />
+    <Compile Include="PageObjectsExample\RefactoringToPageObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
