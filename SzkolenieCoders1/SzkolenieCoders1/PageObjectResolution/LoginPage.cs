@@ -22,11 +22,11 @@ namespace SzkolenieCoders1.PageObjectResolution
         {
             WaitForClickable(By.Id("user_login"), 5);
             var userLogin = browser.FindElement(By.Id("user_login"));
-            userLogin.SendKeys("automatyzacja");
+            userLogin.SendKeys(credential.UserName);
 
             WaitForClickable(By.Id("user_pass"), 5);
             var password = browser.FindElement(By.Id("user_pass"));
-            password.SendKeys("jesien2018");
+            password.SendKeys(credential.Password);
 
             WaitForClickable(By.Id("wp-submit"), 5);
             var login = browser.FindElement(By.Id("wp-submit"));

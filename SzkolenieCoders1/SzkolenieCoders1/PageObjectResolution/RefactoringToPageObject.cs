@@ -9,9 +9,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+
 namespace SzkolenieCoders1.PageObjectResolution
 {
-    public class RefactoringToPageObject
+    public class RefactoringToPageObject:IDisposable
     {
         private ChromeDriver browser;
 
@@ -22,17 +23,24 @@ namespace SzkolenieCoders1.PageObjectResolution
         [Fact]
         public void CanPublishNote_WithPageObjects()
         {
+            var note = ExampleNote();
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.Login(this.ProperLoginData());
             adminPage.OpenNewNote();
-            var newNoteUrl = adminPage.CreateNote(this.ExampleNote());
+            var newNoteUrl = adminPage.CreateNote(note);
             adminPage.Logout();
             var notePage = new NotePage(newNoteUrl);
-            Dispose();
+
+            // assert 
+            browser.Navigate().GoToUrl(newNoteUrl);
+
+            Assert.Equal(note.Title, browser.FindElement(By.CssSelector(".entry-title")).Text);
+            Assert.Equal(note.Text, browser.FindElement(By.CssSelector(".entry-content")).Text);
+
         }
 
         private Note ExampleNote()
-        {
+        { 
             return new Note(Faker.Lorem.Sentence(), Faker.Lorem.Sentence());
         }
 
