@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using Xunit;
 
@@ -40,55 +41,99 @@ namespace Automatyzacja2019
             var results = browser.FindElements(By.CssSelector("span.st"));
             Assert.NotNull(results.FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń realizowanych przez Code Sprinters.")));
         }
-    }
 
-    public class SecondWebTest : IDisposable
-    {
-        IWebDriver browser;
-
-        public SecondWebTest()
+        [Fact]
+        public void CanPublishNote()
         {
-            browser = new ChromeDriver();
+            browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
+
+            WaitForClickable(By.Id("user_login"), 5);
+            var userLogin = browser.FindElement(By.Id("user_login"));
+            userLogin.SendKeys("automatyzacja");
+
+            WaitForClickable(By.Id("user_pass"), 5);
+            var password = browser.FindElement(By.Id("user_pass"));
+            password.SendKeys("jesien2018");
+
+            WaitForClickable(By.Id("wp-submit"), 5);
+            var login = browser.FindElement(By.Id("wp-submit"));
+            login.Click();
+
+
+            var menuElements = browser.FindElements(By.ClassName("wp-menu-name"));
+
+            var posts = menuElements.Single(x => x.Text == "Wpisy");
+            posts.Click();
+
+            var submenuItems = browser.FindElements(By.CssSelector(".wp-submenu > li"));
+            var newPost = submenuItems.Single(x => x.Text == "Dodaj nowy");
+            newPost.Click();
+
+
+            var noteTitle = browser.FindElement(By.Id("title-prompt-text"));
+            noteTitle.Click();
+            var title = browser.FindElement(By.Id("title"));
+            var exampleTitle = Faker.Lorem.Sentence();
+            title.SendKeys(exampleTitle);
+
+            browser.FindElement(By.Id("content-html")).Click();
+
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
+
+
+            var content = browser.FindElement(By.Id("content"));
+            var exampleContent = Faker.Lorem.Paragraph();
+            content.SendKeys(exampleContent);
+
+            var publishButton = browser.FindElement(By.Id("publish"));
+            publishButton.Click();
+
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
+            var postUrl = browser.FindElement(By.CssSelector("#sample-permalink > a"));
+            var url = postUrl.GetAttribute("href");
+
+            MoveToElement(By.Id("wp-admin-bar-my-account"));
+
+            WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
+
+            var logout = browser.FindElement(By.Id("wp-admin-bar-logout"));
+            logout.Click();
+
+            Assert.NotNull(browser.FindElement(By.Id("user_login")));
+            Assert.NotNull(browser.FindElement(By.Id("user_pass")));
+
+            browser.Navigate().GoToUrl(url);
+
+            Assert.Equal(exampleTitle, browser.FindElement(By.CssSelector(".entry-title")).Text);
+            Assert.Equal(exampleContent, browser.FindElement(By.CssSelector(".entry-content")).Text);
+
         }
 
-        public void Dispose()
-        {
-            browser.Quit();
-        }
-
-        public void WaitForClickable(By by, int seconds)
+        private void WaitForClickable(By by, int seconds)
         {
             var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
         }
 
-        public void WaitForClickable(IWebElement element, int seconds)
+        private void WaitForClickable(IWebElement element, int seconds)
         {
             var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
         }
 
-        [Fact]
-        public void CreateAndCheckNote()
+        private void MoveToElement(By selector)
         {
-            browser.Navigate().GoToUrl("https://www.automatyzacja.benedykt.net/wp-admin");
+            var element = browser.FindElement(selector);
+            MoveToElement(element);
+        }
 
-            var usernameBox = browser.FindElement(By.Id("user_login"));
-            var passwordBox = browser.FindElement(By.Id("user_pass"));
-            usernameBox.Click();
-            usernameBox.SendKeys("automatyzacja");
-            passwordBox.Click();
-            passwordBox.SendKeys("jesien2018");
-
-            var searchButton = browser.FindElement(By.Id("wp-submit"));
-            searchButton.Click();
-
-            var wpisy = browser.FindElement(By.ClassName("wp-menu-name"));
-            wpisy.Click();
-            var dodajNowy = browser.FindElement(By.ClassName("page-title-action");
-            dodajNowy.Click();
-            
-
+        private void MoveToElement(IWebElement element)
+        {
+            Actions builder = new Actions(browser);
+            Actions moveTo = builder.MoveToElement(element);
+            moveTo.Build().Perform();
         }
     }
 }
