@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace SzkolenieCoders1
+namespace Automatyzacja
 {
     public class FirstWebTest : IDisposable
     {
-        private IWebDriver browser;
-
+        IWebDriver browser;
         public FirstWebTest()
         {
             browser = new ChromeDriver();
@@ -29,96 +28,116 @@ namespace SzkolenieCoders1
         [Fact]
         public void ICanSearchInGoogle()
         {
-
-            //wchodzimy na google.com
+            // arrange
             browser.Navigate().GoToUrl("http://google.com");
 
-            //szukamy codesprinters
-            IWebElement searchBox = browser.FindElement(By.ClassName("gLFyf"));
-            searchBox.SendKeys("codesprinters");
+            // act
+            var queryField = browser.FindElement(By.CssSelector(".gLFyf.gsfi"));
+            queryField.SendKeys("codesprinters");
 
-            IWebElement searchKey = browser.FindElement(By.XPath("//div[2]/div/div[3]/center/input[1]"));
-            searchKey.Click();
+            var searchButton = browser.FindElement(By.ClassName("gNO89b"));
+            searchButton.Click();
 
-            //sprawdzamy ze w wyniku jest code sprinters
-            var result = browser.FindElements(By.CssSelector("span.st"));
-            Assert.NotNull(result.FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń")));
+
+            // assert
+            var results = browser.FindElements(By.CssSelector("span.st"));
+            Assert.NotNull(results.FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń realizowanych przez")));
+
         }
+
 
         [Fact]
-        public void ICanAddNoteToBlog()
+        public void CanPublishNote()
         {
-            string title = Faker.Lorem.Sentence();
-            string text = Faker.Lorem.Sentence();
-            browser.Navigate().GoToUrl("http://automatyzacja.benedykt.net/wp-admin");
+            browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
 
-            WaitForClickable(By.Id("user_login"), 10);
+            WaitForClickable(By.Id("user_login"), 5);
+            var userLogin = browser.FindElement(By.Id("user_login"));
+            userLogin.SendKeys("automatyzacja");
 
-            IWebElement login = browser.FindElement(By.Id("user_login"));
-            login.SendKeys("automatyzacja");
-
-            IWebElement password = browser.FindElement(By.Id("user_pass"));
+            WaitForClickable(By.Id("user_pass"), 5);
+            var password = browser.FindElement(By.Id("user_pass"));
             password.SendKeys("jesien2018");
 
-            IWebElement signInButton = browser.FindElement(By.Id("wp-submit"));
-            signInButton.Click();
+            WaitForClickable(By.Id("wp-submit"), 5);
+            var login = browser.FindElement(By.Id("wp-submit"));
+            login.Click();
 
-            IWebElement noteMenu = browser.FindElement(By.Id("menu-posts"));
-            noteMenu.Click();
 
-            IWebElement buttonNewNote = browser.FindElement(By.ClassName("page-title-action"));
-            buttonNewNote.Click();
+            var menuElements = browser.FindElements(By.ClassName("wp-menu-name"));
 
-            IWebElement titleNoteTextBox = browser.FindElement(By.Id("title"));
-            titleNoteTextBox.SendKeys(title);
+            var posts = menuElements.Single(x => x.Text == "Wpisy");
+            posts.Click();
 
-            IWebElement textNoteTextBox = browser.FindElement(By.ClassName("wp-editor-area"));
-            textNoteTextBox.SendKeys(text);
+            var submenuItems = browser.FindElements(By.CssSelector(".wp-submenu > li"));
+            var newPost = submenuItems.Single(x => x.Text == "Dodaj nowy");
+            newPost.Click();
 
-            IWebElement publishNoteButton = browser.FindElement(By.Id("publish"));
-            publishNoteButton.Click();
 
-            WaitForVisible(By.Id("message"), 5);
+            var noteTitle = browser.FindElement(By.Id("title-prompt-text"));
+            noteTitle.Click();
+            var title = browser.FindElement(By.Id("title"));
+            var exampleTitle = Faker.Lorem.Sentence();
+            title.SendKeys(exampleTitle);
 
-            IWebElement linkObject = browser.FindElement(By.CssSelector("#sample-permalink>a"));
-            string linkToNote = linkObject.GetAttribute("href");
+            browser.FindElement(By.Id("content-html")).Click();
 
-            IWebElement logOutButton = browser.FindElement(By.Id("wp-admin-bar-logout"));
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
 
-            MoveToElement(By.ClassName("display-name"));
-            logOutButton.Click();
 
-            browser.Navigate().GoToUrl(linkToNote);
+            var content = browser.FindElement(By.Id("content"));
+            var exampleContent = Faker.Lorem.Paragraph();
+            content.SendKeys(exampleContent);
 
-            var resultNote = browser.FindElements(By.XPath("//div[contains(@id, 'primary')]"));
-            Assert.NotNull(resultNote.FirstOrDefault(e => e.Text.Contains(title)));
-            Assert.NotNull(resultNote.FirstOrDefault(e => e.Text.Contains(text)));
+            var publishButton = browser.FindElement(By.Id("publish"));
+            publishButton.Click();
+
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
+            var postUrl = browser.FindElement(By.CssSelector("#sample-permalink > a"));
+            var url = postUrl.GetAttribute("href");
+
+            MoveToElement(By.Id("wp-admin-bar-my-account"));
+
+            WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
+
+            var logout = browser.FindElement(By.Id("wp-admin-bar-logout"));
+            logout.Click();
+
+            Assert.NotNull(browser.FindElement(By.Id("user_login")));
+            Assert.NotNull(browser.FindElement(By.Id("user_pass")));
+
+            browser.Navigate().GoToUrl(url);
+
+            Assert.Equal(exampleTitle, browser.FindElement(By.CssSelector(".entry-title")).Text);
+            Assert.Equal(exampleContent, browser.FindElement(By.CssSelector(".entry-content")).Text);
 
         }
 
-        public void MoveToElement(By selector)
+        private void WaitForClickable(By by, int seconds)
+        {
+            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
+        }
+
+        private void WaitForClickable(IWebElement element, int seconds)
+        {
+            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
+        }
+
+        private void MoveToElement(By selector)
         {
             var element = browser.FindElement(selector);
             MoveToElement(element);
         }
-
-        public void MoveToElement(IWebElement element)
+        private void MoveToElement(IWebElement element)
         {
             Actions builder = new Actions(browser);
             Actions moveTo = builder.MoveToElement(element);
             moveTo.Build().Perform();
         }
 
-        public void WaitForVisible(By by, int seconds)
-        {
-            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(by));
-        }
-
-        public void WaitForClickable(By by, int seconds)
-        {
-            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
-        }
     }
 }
