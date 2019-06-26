@@ -95,12 +95,9 @@ namespace annakocyk
             var newTitle = browser.FindElement(By.Id("title"));
             newTitle.SendKeys("Tytuł testowy Ania Kocyk");
 
+            var newEdit = browser.FindElement(By.ClassName("wp-editor-area"));
+            newEdit.SendKeys("Treść notatki");
 
-            //var sarchBox = browser.FindElementByName("post_title");
-            //sarchBox.SendKeys("żyrafy wchodzą do szafy");
-
-            //var serchBox = browser.FindElementByClassName("button button-primary button-large")
-            //    searchButton.Click();
 
 
 
