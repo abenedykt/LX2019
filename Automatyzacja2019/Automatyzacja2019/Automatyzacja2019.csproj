@@ -68,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="PageObjectExample\AdminPage.cs" />
+    <Compile Include="PageObjectExample\Credentials.cs" />
+    <Compile Include="PageObjectExample\LoginPage.cs" />
+    <Compile Include="PageObjectExample\Note.cs" />
+    <Compile Include="PageObjectExample\NotePage.cs" />
+    <Compile Include="PageObjectExample\PageObjectPattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

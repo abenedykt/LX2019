@@ -1,64 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using Xunit;
 
-namespace Automatyzacja2019
+namespace Automatyzacja2019.PageObjectExample
 {
-    public class FirstWebTest : IDisposable
+    internal class AdminPage
     {
-        IWebDriver browser;
+        private IWebDriver browser;
 
-        public FirstWebTest()
+        public AdminPage(IWebDriver browser)
         {
-            browser = new ChromeDriver();
+            this.browser = browser;
         }
 
-        public void Dispose()
+        internal void OpenNewNote()
         {
-            browser.Quit();
-        }
-
-        [Fact]
-        public void ICanSearchInGoogle()
-        {
-            browser.Navigate().GoToUrl("https://www.google.com/");
-
-            var searchBox = browser.FindElement(By.CssSelector(".gLFyf.gsfi")); // browser.FindElementByCssSelector(".gLFyf.gsfi").SendKeys("code sprinters");
-            searchBox.SendKeys("code sprinters");
-
-            Thread.Sleep(1000);
-            var searchButton = browser.FindElement(By.ClassName("gNO89b"));
-            searchButton.Click(); // searchButton.Submit();
-
-            var results = browser.FindElements(By.CssSelector("span.st"));
-            Assert.NotNull(results.FirstOrDefault(e => e.Text.Contains("Harmonogram szkoleń realizowanych przez Code Sprinters.")));
-        }
-
-        [Fact]
-        public void CanPublishNote()
-        {
-            browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
-
-            WaitForClickable(By.Id("user_login"), 5);
-            var userLogin = browser.FindElement(By.Id("user_login"));
-            userLogin.SendKeys("automatyzacja");
-
-            WaitForClickable(By.Id("user_pass"), 5);
-            var password = browser.FindElement(By.Id("user_pass"));
-            password.SendKeys("jesien2018");
-
-            WaitForClickable(By.Id("wp-submit"), 5);
-            var login = browser.FindElement(By.Id("wp-submit"));
-            login.Click();
-
             var menuElements = browser.FindElements(By.ClassName("wp-menu-name"));
 
             var posts = menuElements.Single(x => x.Text == "Wpisy");
@@ -67,7 +25,20 @@ namespace Automatyzacja2019
             var submenuItems = browser.FindElements(By.CssSelector(".wp-submenu > li"));
             var newPost = submenuItems.Single(x => x.Text == "Dodaj nowy");
             newPost.Click();
+        }
 
+        internal void LogOut()
+        {
+            MoveToElement(By.Id("wp-admin-bar-my-account"));
+
+            WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
+
+            var logout = browser.FindElement(By.Id("wp-admin-bar-logout"));
+            logout.Click();
+        }
+
+        internal Uri CreateNote(Note note)
+        {
             var noteTitle = browser.FindElement(By.Id("title-prompt-text"));
             noteTitle.Click();
             var title = browser.FindElement(By.Id("title"));
@@ -91,20 +62,7 @@ namespace Automatyzacja2019
             var postUrl = browser.FindElement(By.CssSelector("#sample-permalink > a"));
             var url = postUrl.GetAttribute("href");
 
-            MoveToElement(By.Id("wp-admin-bar-my-account"));
-
-            WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
-
-            var logout = browser.FindElement(By.Id("wp-admin-bar-logout"));
-            logout.Click();
-
-            Assert.NotNull(browser.FindElement(By.Id("user_login")));
-            Assert.NotNull(browser.FindElement(By.Id("user_pass")));
-
-            browser.Navigate().GoToUrl(url);
-
-            Assert.Equal(exampleTitle, browser.FindElement(By.CssSelector(".entry-title")).Text);
-            Assert.Equal(exampleContent, browser.FindElement(By.CssSelector(".entry-content")).Text);
+            return new Uri(url);
         }
 
         private void WaitForClickable(By by, int seconds)
