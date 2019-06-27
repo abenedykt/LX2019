@@ -37,7 +37,7 @@ namespace SzkolenieCoders1.PageObjectResolution
         {
             var note = ExampleNote();
             var links = UrlData();
-            var comment = CommentData();
+            
             var loginPage = new LoginPage(browser, links);
             var adminPage = loginPage.Login(this.ProperLoginData());
             adminPage.OpenNewNote();
@@ -47,12 +47,16 @@ namespace SzkolenieCoders1.PageObjectResolution
 
             browser.Navigate().GoToUrl(newNoteUrl);
 
-            notePage.AddComment(comment);
+            for (int i = 0; i < 10; i++)
+            {
+                var comment = CommentData();
+                notePage.AddComment(comment);
+            }
 
             Assert.Equal(note.Title, notePage.Title);
             Assert.Equal(note.Text, notePage.Text);
 
-            Assert.Equal(comment.CommentText, notePage.Comment);
+            //Assert.Equal(comment.CommentText, notePage.Comment);
         }
 
         private Links UrlData()
@@ -69,11 +73,13 @@ namespace SzkolenieCoders1.PageObjectResolution
         {
             return new Credentials("automatyzacja", "jesien2018");
         }
-
+       
         private Comment CommentData()
         {
             return new Comment(Faker.Lorem.Sentence(), Faker.Name.FullName(), Faker.Internet.Email());
         }
+
+        
 
         public void Dispose()
         {
