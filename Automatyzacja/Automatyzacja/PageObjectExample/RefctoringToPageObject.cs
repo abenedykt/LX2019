@@ -40,6 +40,25 @@ namespace Automatyzacja.PageObjectExample
             Assert.Equal(exampleNote.Content, notePage.Content);
         }
 
+        [Fact]
+        public void CanPublishCommentsToANewNote()
+        {
+            var exampleNote = ExampleNote();
+            var loginPage = new LoginPage(browser);
+            var adminPage = loginPage.Login(PropperLoginData());
+            adminPage.OpenNewNote();
+            var newNoteUrl = adminPage.CreateNote(exampleNote);
+
+            adminPage.Logout();
+            var notePage = new NotePage(browser, newNoteUrl);
+
+            var comment = new Comment(Faker.Name.FullName(),Faker.Internet.Email(), Faker.Lorem.Paragraph());
+
+            notePage.AddNewComment(comment);
+
+            Assert.True(notePage.HasComment(comment));
+        }
+
         public void Dispose()
         {
             browser.Quit();
