@@ -1,31 +1,47 @@
 ﻿using System;
+using System.Linq;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Chrome;
 
 namespace annakocyk.PageObjectsExample
 {
-    internal class LoginPage : PageBase
+    internal class CommentPage
     {
-        public LoginPage(IWebDriver browser) : base(browser)
+        private ChromeDriver browser;
+
+        public CommentPage(ChromeDriver browser)
         {
-            browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
+            this.browser = browser;
         }
 
         internal AdminPage Login(Credentials credentials)
         {
+            browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
+
             WaitForClickable(By.Id("user_login"), 5);
             var userLogin = browser.FindElement(By.Id("user_login"));
-            userLogin.SendKeys(credentials.UserName);
+            userLogin.SendKeys("automatyzacja");
 
             WaitForClickable(By.Id("user_pass"), 5);
             var password = browser.FindElement(By.Id("user_pass"));
-            password.SendKeys(credentials.Password);
+            password.SendKeys("jesien2018");
 
             WaitForClickable(By.Id("wp-submit"), 5);
             var login = browser.FindElement(By.Id("wp-submit"));
             login.Click();
-
             return new AdminPage(browser);
+
+            
+        }
+
+        private void MoveToElement(By by)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void WaitForClickable(object p, int v)
+        {
+          
         }
     }
 }

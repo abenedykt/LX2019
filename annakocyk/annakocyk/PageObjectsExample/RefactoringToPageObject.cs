@@ -24,7 +24,7 @@ namespace annakocyk.PageObjectsExample
         [Fact]
         public void CanPublishNote_WithPageObjects()
         {
-            var loginPage = new LoginPage(browser);
+            var loginPage = new CommentPage(browser);
             var adminPage = loginPage.Login(this.ProperLoginData());
             adminPage.OpenNewNote();
             var newNoteUrl = adminPage.CreateNote(ExampleNote());
