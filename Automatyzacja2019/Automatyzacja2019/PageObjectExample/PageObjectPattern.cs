@@ -21,12 +21,17 @@ namespace Automatyzacja2019.PageObjectExample
         [Fact]
         public void CanPublishNoteWithPageObjects()
         {
+            var exampleNote = this.ExampleNote();
+
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.LogIn(PropperLoginData());
             adminPage.OpenNewNote();
-            var newNoteUrl = adminPage.CreateNote(ExampleNote());
+            var newNoteUrl = adminPage.CreateNote(exampleNote);
             adminPage.LogOut();
             var notePage = new NotePage(browser, newNoteUrl);
+
+            Assert.Equal(exampleNote.Title, notePage.Title);
+            Assert.Equal(exampleNote.Content, notePage.Content);
         }
 
         public void Dispose()

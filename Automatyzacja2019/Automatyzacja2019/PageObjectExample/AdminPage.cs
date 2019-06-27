@@ -42,8 +42,7 @@ namespace Automatyzacja2019.PageObjectExample
             var noteTitle = browser.FindElement(By.Id("title-prompt-text"));
             noteTitle.Click();
             var title = browser.FindElement(By.Id("title"));
-            var exampleTitle = Faker.Lorem.Sentence();
-            title.SendKeys(exampleTitle);
+            title.SendKeys(note.Title);
 
             browser.FindElement(By.Id("content-html")).Click();
 
@@ -51,8 +50,7 @@ namespace Automatyzacja2019.PageObjectExample
             WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
 
             var content = browser.FindElement(By.Id("content"));
-            var exampleContent = Faker.Lorem.Paragraph();
-            content.SendKeys(exampleContent);
+            content.SendKeys(note.Content);
 
             var publishButton = browser.FindElement(By.Id("publish"));
             publishButton.Click();
