@@ -52,9 +52,11 @@ namespace SzkolenieCoders1.PageObjectResolution
                 var comment = CommentData();
                 notePage.AddComment(comment);
             }
+            var answear = AnswearCommentData();
+            notePage.AddAnswearToComment(answear);
 
-            Assert.Equal(note.Title, notePage.Title);
-            Assert.Equal(note.Text, notePage.Text);
+            //Assert.Equal(note.Title, notePage.Title);
+            //Assert.Equal(note.Text, notePage.Text);
 
             //Assert.Equal(comment.CommentText, notePage.Comment);
         }
@@ -77,6 +79,11 @@ namespace SzkolenieCoders1.PageObjectResolution
         private Comment CommentData()
         {
             return new Comment(Faker.Lorem.Sentence(), Faker.Name.FullName(), Faker.Internet.Email());
+        }
+
+        private Answear AnswearCommentData()
+        {
+            return new Answear(Faker.Lorem.Sentence(), Faker.Name.FullName(), Faker.Internet.Email(), 4); //liczymy od 0
         }
 
         

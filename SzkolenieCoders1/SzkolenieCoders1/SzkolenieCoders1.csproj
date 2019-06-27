@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="PageObjectResolution\AdminPage.cs" />
+    <Compile Include="PageObjectResolution\Answear.cs" />
     <Compile Include="PageObjectResolution\Comment.cs" />
     <Compile Include="PageObjectResolution\Credentials.cs" />
     <Compile Include="PageObjectResolution\Links.cs" />
