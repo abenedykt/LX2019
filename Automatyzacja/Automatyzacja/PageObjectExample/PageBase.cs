@@ -13,6 +13,7 @@ namespace Automatyzacja.PageObjectExample
         {
             this.browser = browser;
         }
+
         protected void WaitForClickable(By by, int seconds)
         {
             var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));

@@ -2,6 +2,7 @@
 
 namespace Automatyzacja.PageObjectExample
 {
+
     internal class LoginPage : PageBase
     {
         public LoginPage(IWebDriver browser) : base(browser)

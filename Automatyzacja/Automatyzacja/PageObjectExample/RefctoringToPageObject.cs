@@ -11,29 +11,33 @@ namespace Automatyzacja.PageObjectExample
 
         public RefctoringToPageObject()
         {
-            browser = new ChromeDriver();
+            var chrome = new ChromeDriver();
+            chrome.Manage().Window.Maximize();
+
+            browser = chrome;
         }
 
         [Fact]
         public void CanPublishNote_WithPageObjects()
         {
+
+            // arrange
+            var exampleNote = this.ExampleNote();
+
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.Login(this.PropperLoginData());
             adminPage.OpenNewNote();
-            var newNoteUrl = adminPage.CreateNote(this.ExampleNote());
+
+
+            // act
+            var newNoteUrl = adminPage.CreateNote(exampleNote);
+
+            // assert
             adminPage.Logout();
             var notePage = new NotePage(browser, newNoteUrl);
-                       
-            //Assert.Equal(... notePage.Title);
-            //Assert.Equal(... notePage.Content);
 
-            //Assert.NotNull(browser.FindElement(By.Id("user_login")));
-            //Assert.NotNull(browser.FindElement(By.Id("user_pass")));
-
-            
-            //Assert.Equal(exampleTitle, browser.FindElement(By.CssSelector(".entry-title")).Text);
-            //Assert.Equal(exampleContent, browser.FindElement(By.CssSelector(".entry-content")).Text);
-
+            Assert.Equal(exampleNote.Title, notePage.Title);
+            Assert.Equal(exampleNote.Content, notePage.Content);
         }
 
         public void Dispose()
