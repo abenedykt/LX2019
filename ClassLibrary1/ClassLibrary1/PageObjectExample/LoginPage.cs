@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace ClassLibrary1.PageObjectExample
 {
@@ -13,23 +14,22 @@ namespace ClassLibrary1.PageObjectExample
             browser.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
         }
 
-        internal AdminPage LogIn(object p)
+        internal AdminPage LogIn(Credentials  credentials)
         {
 
 
             WaitForClickable(By.Id("user_login"), 5);
             var userLogin = browser.FindElement(By.Id("user_login"));
-            userLogin.SendKeys("automatyzacja");
-
+            userLogin.SendKeys(credentials.UserName);
             WaitForClickable(By.Id("user_pass"), 5);
             var password = browser.FindElement(By.Id("user_pass"));
-            password.SendKeys("jesien2018");
+            password.SendKeys(credentials.Password);
 
             WaitForClickable(By.Id("wp-submit"), 5);
             var login = browser.FindElement(By.Id("wp-submit"));
             login.Click();
 
-            return new AdminPage(driver);
+            return new AdminPage(browser);
         }
 
         internal static void OpenNewNote()
@@ -49,5 +49,17 @@ namespace ClassLibrary1.PageObjectExample
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
         }
 
+    }
+
+    internal class Credentials
+    {
+        public Credentials(string username, string password)
+        {
+            UserName = username;
+            Password = password;
+        }
+
+        public string UserName { get; }
+        public string Password { get; }
     }
 }

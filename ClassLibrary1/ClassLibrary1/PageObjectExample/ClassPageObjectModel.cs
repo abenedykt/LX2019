@@ -25,13 +25,22 @@ namespace ClassLibrary1.PageObjectExample
         [Fact]
         public void CanPublishNote2()
         {
+            // arrange
+            var exampleNote = this.ExampleNote(); 
+
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.LogIn(this.ProperLoginData());
-           
             adminPage.OpenNewNote();
+
+            //act
             var newNoteUrl = adminPage.CreateNote(ExampleNote());
+
+            //assert
             adminPage.Logout();
             var notePage = new NotePage(browser, newNoteUrl);
+
+            Assert.Equal(exampleNote.Title, notePage.Title);
+            Assert.Equal(exampleNote.Content, notePage.Content);
 
             //Assert.Equal(... notePage.Title);
             //Assert.Equal(... notePAge.Content); 
@@ -39,18 +48,19 @@ namespace ClassLibrary1.PageObjectExample
             //Assert.NotNull(browser.FindElement(By.Id("user_login")));
             //Assert.NotNull(browser.FindElement(By.Id("user_pass")));
 
+            //Assert.Equal(exampleTitle, browser.FindElement(By.CssSelector(.entry-title)),  )
+
         }
 
         private Note ExampleNote()
         {
-            return new Note();
+            return new Note("aaa","bbb");
         }
 
-        private object ProperLoginData()
+  
+        private Credentials ProperLoginData()
         {
-            var userLogin = "automatyzacja";
-            var password = "jesien2018";
-
+            return new Credentials("automatyzacja", "jesien2018");
         }
 
 
@@ -148,5 +158,14 @@ namespace ClassLibrary1.PageObjectExample
 
     internal class Note
     {
+
+        public Note(string title, string content)
+        {
+            Title = title;
+            Content = content;
+        }
+
+        public string Title { get; internal set; }
+        public string Content { get; internal set; }
     }
 }
