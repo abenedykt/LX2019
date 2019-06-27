@@ -1,14 +1,15 @@
 ﻿using System;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
-namespace TestyAutoSzkolenie.Utility
+namespace TestyAutoSzkolenie.POM
 {
-    public class WaitHelper
+    public abstract class PageBase
     {
         private IWebDriver driver;
 
-        public WaitHelper(IWebDriver driver)
+        public PageBase(IWebDriver driver)
         {
             this.driver = driver;
         }
@@ -23,6 +24,19 @@ namespace TestyAutoSzkolenie.Utility
         {
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
+        }
+
+        public void MoveToElement(By selector)
+        {
+            var element = driver.FindElement(selector);
+            MoveToElement(element);
+        }
+
+        public void MoveToElement(IWebElement element)
+        {
+            Actions builder = new Actions(driver);
+            Actions moveTo = builder.MoveToElement(element);
+            moveTo.Build().Perform();
         }
     }
 }

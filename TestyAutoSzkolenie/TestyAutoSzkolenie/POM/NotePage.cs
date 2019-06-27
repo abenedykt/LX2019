@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenQA.Selenium;
+using TestyAutoSzkolenie.POM;
 
 namespace AutomationTraining
 {
-    internal class NotePage
+    internal class NotePage : PageBase
     {
         IWebDriver driver;
         private Uri url;
 
-        public NotePage(Uri url, IWebDriver driver)
+        public NotePage(Uri url, IWebDriver driver) : base(driver)
         {
             this.driver = driver;
             this.url = url;

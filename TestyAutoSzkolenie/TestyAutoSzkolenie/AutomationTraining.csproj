@@ -69,13 +69,12 @@
   <ItemGroup>
     <Compile Include="POM\AdminPage.cs" />
     <Compile Include="POM\NotePage.cs" />
+    <Compile Include="POM\PageBase.cs" />
     <Compile Include="Utility\Note.cs" />
     <Compile Include="TestCases\AddNoteTestCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="POM\LoginPage.cs" />
     <Compile Include="Utility\Credentials.cs" />
-    <Compile Include="Utility\Move.cs" />
-    <Compile Include="Utility\WaitHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

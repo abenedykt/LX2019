@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Linq;
 using OpenQA.Selenium;
-using TestyAutoSzkolenie.Utility;
+using TestyAutoSzkolenie.POM;
 using Xunit;
 
 namespace AutomationTraining
 {
-    public class AdminPage
+    public class AdminPage: PageBase
     {
         private IWebDriver driver;
-        private WaitHelper wait;
-        private Move move;
 
-        public AdminPage(IWebDriver driver)
+        public AdminPage(IWebDriver driver) : base(driver)
         {
             this.driver = driver;
-            wait = new WaitHelper(driver);
-            move = new Move(driver);
         }
 
         public void OpenNewNote()
@@ -41,8 +37,8 @@ namespace AutomationTraining
 
             driver.FindElement(By.Id("content-html")).Click();
 
-            wait.WaitForClickable(By.Id("publish"), 5);
-            wait.WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
 
 
             var content = driver.FindElement(By.Id("content"));
@@ -52,8 +48,8 @@ namespace AutomationTraining
             var publishButton = driver.FindElement(By.Id("publish"));
             publishButton.Click();
 
-            wait.WaitForClickable(By.Id("publish"), 5);
-            wait.WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
+            WaitForClickable(By.Id("publish"), 5);
+            WaitForClickable(By.CssSelector(".edit-slug.button"), 5);
             var postUrl = driver.FindElement(By.CssSelector("#sample-permalink > a"));
             var url = new Uri(postUrl.GetAttribute("href"));
 
@@ -62,9 +58,9 @@ namespace AutomationTraining
 
         public void Logout()
         {
-            move.MoveToElement(By.Id("wp-admin-bar-my-account"));
+            MoveToElement(By.Id("wp-admin-bar-my-account"));
 
-            wait.WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
+            WaitForClickable(By.Id("wp-admin-bar-logout"), 5);
 
             var logout = driver.FindElement(By.Id("wp-admin-bar-logout"));
             logout.Click();
