@@ -26,7 +26,7 @@ namespace ClassLibrary1.PageObjectExample
         public void CanPublishNote2()
         {
             // arrange
-            var exampleNote = this.ExampleNote(); 
+            var exampleNote = this.ExampleNote();
 
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.LogIn(this.ProperLoginData());
@@ -52,12 +52,52 @@ namespace ClassLibrary1.PageObjectExample
 
         }
 
-        private Note ExampleNote()
+
+        [Fact]
+        public void CanPublishCommentToANewNote()
         {
-            return new Note("aaa","bbb");
+            // arrange
+            var exampleNote = this.ExampleNote();
+            var loginPage = new LoginPage(browser);
+            var adminPage = loginPage.LogIn(this.ProperLoginData());
+            adminPage.OpenNewNote();
+
+            //act
+            var newNoteUrl = adminPage.CreateNote(ExampleNote());
+
+            //assert
+            adminPage.Logout();
+            var notePage = new NotePage(browser, newNoteUrl);
+
+            // Assert.Equal(exampleNote.Title, notePage.Title);
+            // Assert.Equal(exampleNote.Content, notePage.Content);
+
+
+            //Przjsc do pola tesktowego komentarza pod wpisem i dodoac tresc
+            //nacisnac opubliku komentarz
+            //asrcjapo tresi komentarza
+            // var newNoteUrl = adminPage.CreateNote(ExampleNote());
+
+            //var komnet = NotePage.AddKoment(tresckoment());
+
+            var comment = new Comment(Faker.Name.FullName(), Faker.Internet.Email(), Faker.Lorem.Paragraph());
+            notePage.AddNewComment(comment);
+
+            Assert.True(notePage.HasComment(comment));
+
         }
 
-  
+        //private object tresckoment()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        private Note ExampleNote()
+        {
+            return new Note("aaa", "bbb");
+        }
+
+
         private Credentials ProperLoginData()
         {
             return new Credentials("automatyzacja", "jesien2018");
@@ -156,16 +196,6 @@ namespace ClassLibrary1.PageObjectExample
         //}
     }
 
-    internal class Note
-    {
-
-        public Note(string title, string content)
-        {
-            Title = title;
-            Content = content;
-        }
-
-        public string Title { get; internal set; }
-        public string Content { get; internal set; }
-    }
 }
+
+

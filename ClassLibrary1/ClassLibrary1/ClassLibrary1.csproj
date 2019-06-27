@@ -70,7 +70,9 @@
     <Compile Include="Class1.cs" />
     <Compile Include="PageObjectExample\AdminPage.cs" />
     <Compile Include="PageObjectExample\ClassPageObjectModel.cs" />
+    <Compile Include="PageObjectExample\Comment.cs" />
     <Compile Include="PageObjectExample\LoginPage.cs" />
+    <Compile Include="PageObjectExample\Note.cs" />
     <Compile Include="PageObjectExample\NotePage.cs" />
     <Compile Include="PageObjectExample\PageBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
