@@ -198,4 +198,22 @@ namespace ClassLibrary1.PageObjectExample
 
 }
 
-
+//> new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }.Sum()
+//55
+//> 
+//. new[] {1, 2, 3, 4, 5}.Sum()
+//15
+//> new [] { 1,2,3,4,5}.Average()
+//3
+//> new [] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}.Single(x=>x % 33)
+//(1,50): error CS0029: Cannot implicitly convert type 'int' to 'bool'
+//(1,50): error CS1662: Cannot convert lambda expression to intended delegate type because some of the return types in the block are not implicitly convertible to the delegate return type
+//> new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }.Single(x => x % 33 == 0)
+//Sekwencja nie zawiera pasującego elementu.
+//  + System.Linq.Enumerable.Single<TSource>(IEnumerable<TSource>, Func<TSource, bool>)
+//> new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }.SingleOrDefault(x => x % 2 == 0)
+//Sekwencja zawiera więcej niż jeden pasujący element.
+//  + System.Linq.Enumerable.SingleOrDefault<TSource>(IEnumerable<TSource>, Func<TSource, bool>)
+//> new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }.FirstOrDefault(x => x % 2 == 0)
+//2
+//> new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }.Where(x => x % 2 == 0)
