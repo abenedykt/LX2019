@@ -11,7 +11,7 @@ namespace AutomationTraining
         public LoginPage(IWebDriver driver) : base(driver)
         {
             this.driver = driver;
-            driver.Navigate().GoToUrl("https://automatyzacja.benedykt.net/wp-admin");
+            driver.Navigate().GoToUrl(PageAddress.AdminPage);
         }
 
         public AdminPage Login(Credentials credentials)

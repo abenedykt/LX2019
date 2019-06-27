@@ -1,5 +1,4 @@
-﻿
-namespace TestyAutoSzkolenie.Utility
+﻿namespace TestyAutoSzkolenie.Utility
 {
     public class Credentials
     {
