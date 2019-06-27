@@ -5,6 +5,9 @@ namespace SzkolenieCoders1.PageObjectResolution
     public class NotePage : PageBase
     {
         private object newNoteUrl;
+        public string Title => browser.FindElement(By.CssSelector(".entry-title")).Text;
+        public string Text => browser.FindElement(By.CssSelector(".entry-content")).Text;
+        public string Comment => browser.FindElement(By.CssSelector(".comment-content")).Text;
 
 
         public NotePage(object newNoteUrl, IWebDriver browser) : base(browser)

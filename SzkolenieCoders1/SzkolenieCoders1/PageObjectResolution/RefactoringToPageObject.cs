@@ -27,8 +27,8 @@ namespace SzkolenieCoders1.PageObjectResolution
 
             browser.Navigate().GoToUrl(newNoteUrl);
 
-            Assert.Equal(note.Title, browser.FindElement(By.CssSelector(".entry-title")).Text);
-            Assert.Equal(note.Text, browser.FindElement(By.CssSelector(".entry-content")).Text);
+            Assert.Equal(note.Title, notePage.Title);
+            Assert.Equal(note.Text, notePage.Text);
 
         }
 
@@ -49,10 +49,10 @@ namespace SzkolenieCoders1.PageObjectResolution
 
             notePage.AddComment(comment);
 
-            Assert.Equal(note.Title, browser.FindElement(By.CssSelector(".entry-title")).Text);
-            Assert.Equal(note.Text, browser.FindElement(By.CssSelector(".entry-content")).Text);
+            Assert.Equal(note.Title, notePage.Title);
+            Assert.Equal(note.Text, notePage.Text);
 
-            Assert.Equal(comment.CommentText, browser.FindElement(By.CssSelector(".comment-content")).Text);
+            Assert.Equal(comment.CommentText, notePage.Comment);
         }
 
         private Links UrlData()
