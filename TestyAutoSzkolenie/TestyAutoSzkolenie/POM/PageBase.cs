@@ -38,5 +38,13 @@ namespace TestyAutoSzkolenie.POM
             Actions moveTo = builder.MoveToElement(element);
             moveTo.Build().Perform();
         }
+
+        public void ScrollToElement(IWebElement element)
+        {
+            Actions action = new Actions(driver);
+            action.MoveToElement(element);
+            action.Perform();
+
+        }
     }
 }

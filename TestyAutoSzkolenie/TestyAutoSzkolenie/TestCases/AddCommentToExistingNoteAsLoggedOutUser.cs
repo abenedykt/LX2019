@@ -6,11 +6,11 @@ using Xunit;
 
 namespace AutomationTraining
 {
-    public class AddNoteTestCase : IDisposable
+    public class AddCommentToExistingNoteAsLoggedOutUser : IDisposable
     {
         IWebDriver driver;
 
-        public AddNoteTestCase()
+        public AddCommentToExistingNoteAsLoggedOutUser()
         {
             driver = new ChromeDriver();
         }
@@ -28,8 +28,10 @@ namespace AutomationTraining
             adminPage.Logout();
             var notePage = new NotePage(url, driver);
 
-            Assert.Equal(newNote.Title, notePage.Title);
-            Assert.Equal(newNote.Content, notePage.Content);
+            var newComment = CommentData();
+            notePage.AddComment(newComment);
+
+            Assert.True(notePage.HasComment(newComment));
         }
 
         private Note NoteData()
@@ -40,6 +42,11 @@ namespace AutomationTraining
         private Credentials PropperLoginData()
         {
             return new Credentials("automatyzacja", "jesien2018");
+        }
+
+        private Comment CommentData()
+        {
+            return new Comment(Faker.Lorem.Paragraph(), Faker.Name.First(), Faker.Internet.Email());
         }
 
         public void Dispose()

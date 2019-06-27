@@ -70,6 +70,9 @@
     <Compile Include="POM\AdminPage.cs" />
     <Compile Include="POM\NotePage.cs" />
     <Compile Include="POM\PageBase.cs" />
+    <Compile Include="TestCases\AddCommentToExistingNoteAsLoggedOutUser.cs" />
+    <Compile Include="TestCases\AddTenCommentsToExistingNoteAsLoggedOutUser.cs" />
+    <Compile Include="Utility\Comment.cs" />
     <Compile Include="Utility\Note.cs" />
     <Compile Include="TestCases\AddNoteTestCase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
