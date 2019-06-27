@@ -30,8 +30,8 @@ namespace AutomationTraining
 
             var notePage = new NotePage(url, driver);
 
-            Assert.Equal(newNote.Title, driver.FindElement(By.CssSelector(".entry-title")).Text);
-            Assert.Equal(newNote.Content, driver.FindElement(By.CssSelector(".entry-content")).Text);
+            Assert.Equal(newNote.Title, notePage.Title);
+            Assert.Equal(newNote.Content, notePage.Content);
         }
 
         private Note NoteData()
