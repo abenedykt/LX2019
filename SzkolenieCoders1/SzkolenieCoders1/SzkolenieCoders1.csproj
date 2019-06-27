@@ -70,9 +70,11 @@
     <Compile Include="Class1.cs" />
     <Compile Include="PageObjectResolution\AdminPage.cs" />
     <Compile Include="PageObjectResolution\Credentials.cs" />
+    <Compile Include="PageObjectResolution\Links.cs" />
     <Compile Include="PageObjectResolution\LoginPage.cs" />
     <Compile Include="PageObjectResolution\Note.cs" />
     <Compile Include="PageObjectResolution\NotePage.cs" />
+    <Compile Include="PageObjectResolution\PageBase.cs" />
     <Compile Include="PageObjectResolution\RefactoringToPageObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -12,13 +12,12 @@ using Xunit;
 
 namespace SzkolenieCoders1.PageObjectResolution
 {
-    public class AdminPage
+    public class AdminPage : PageBase
     {
-        IWebDriver browser;
 
-        public AdminPage(IWebDriver browser)
+        public AdminPage(IWebDriver browser) : base(browser)
         {
-            this.browser = browser;
+
         }
 
         internal void OpenNewNote()
@@ -68,29 +67,6 @@ namespace SzkolenieCoders1.PageObjectResolution
             logout.Click();
         }
 
-        private void MoveToElement(By selector)
-        {
-            var element = browser.FindElement(selector);
-            MoveToElement(element);
-        }
 
-        private void MoveToElement(IWebElement element)
-        {
-            Actions builder = new Actions(browser);
-            Actions moveTo = builder.MoveToElement(element);
-            moveTo.Build().Perform();
-        }
-
-        private void WaitForClickable(By by, int seconds)
-        {
-            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(by));
-        }
-
-        private void WaitForClickable(IWebElement element, int seconds)
-        {
-            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(seconds));
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
-        }
     }
 }
