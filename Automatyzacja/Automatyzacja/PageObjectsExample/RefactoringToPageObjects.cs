@@ -1,16 +1,6 @@
 ﻿using System;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using Automatyzacja.PageObjectsExample;
 
 namespace Automatyzacja.PageObjectsExample
 {
@@ -25,13 +15,17 @@ namespace Automatyzacja.PageObjectsExample
         [Fact]
         public void CanPublishNote_WithPageObjects()
         {
+            var note = ExampleNote();
             var loginPage = new LoginPage(browser);
             var adminPage = loginPage.Login(this.ProperLoginData());
             adminPage.OpenNewNote();
-            var newNoteUrl = adminPage.CreateNote(this.ExampleNote());
+            var newNoteUrl = adminPage.CreateNote(note);
             adminPage.Logout();
-            var notePage = new NotePage(newNoteUrl);
-            
+            var notePage = new NotePage(browser, newNoteUrl);
+
+            Assert.Equal(note.Title,notePage.Title);
+            Assert.Equal(note.Text, notePage.Content);
+
         }
 
         private Note ExampleNote()

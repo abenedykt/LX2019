@@ -6,6 +6,7 @@ namespace Automatyzacja.PageObjectsExample
 {
     public class LoginPage
     {
+       
         IWebDriver browser;
 
         public LoginPage(IWebDriver browser)
